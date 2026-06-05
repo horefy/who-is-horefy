@@ -5,10 +5,9 @@ import emailjs from "@emailjs/browser";
 import Navbar from "../navbar/navbar";
 import Footer from "../Footer/footer";
 
-
-const EMAILJS_SERVICE_ID = "service_avju8zx";  
+const EMAILJS_SERVICE_ID = "service_avju8zx";
 const EMAILJS_TEMPLATE_ID = "template_30lv39c";
-const EMAILJS_PUBLIC_KEY = "XvT-Uug-5QPahxGgX"; 
+const EMAILJS_PUBLIC_KEY = "XvT-Uug-5QPahxGgX";
 
 export default function Contact() {
   const bgCanvasRef = useRef<HTMLCanvasElement>(null);
@@ -103,7 +102,7 @@ export default function Contact() {
         window.innerWidth * 0.65, window.innerHeight * 0.45, 0,
         window.innerWidth * 0.65, window.innerHeight * 0.45, 340
       );
-      g2.addColorStop(0, "rgba(255,59,30,0.10)");
+      g2.addColorStop(0, "rgba(214,59,32,0.09)");
       g2.addColorStop(1, "transparent");
       ctx.fillStyle = g2;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -132,72 +131,117 @@ export default function Contact() {
 
   const dots = Array.from({ length: 30 });
 
+  // ── Styles dynamiques pour les champs ──
+  const fieldLabelStyle = (name: string): React.CSSProperties => ({
+    fontFamily: "'DM Mono', monospace",
+    fontSize: 10,
+    letterSpacing: "0.22em",
+    textTransform: "uppercase",
+    color: focused === name ? "#D63B20" : "rgba(26,20,16,0.45)",
+    display: "block",
+    marginBottom: 8,
+    transition: "color 0.25s ease",
+    fontWeight: 500,
+  });
+
   const inputStyle = (name: string): React.CSSProperties => ({
     width: "100%",
-    background: "transparent",
-    border: "none",
-    borderBottom: `1px solid ${focused === name ? "var(--accent)" : "rgba(26,20,16,0.12)"}`,
-    padding: "14px 0",
-    fontFamily: "'Space Mono', monospace",
-    fontSize: 12,
-    color: "var(--dark)",
+    background: "rgba(255,255,255,0.55)",
+    border: `1.5px solid ${focused === name ? "#D63B20" : "rgba(26,20,16,0.18)"}`,
+    borderRadius: 3,
+    padding: "12px 14px",
+    fontFamily: "'DM Mono', monospace",
+    fontSize: 13,
+    color: "#1A1410",
     outline: "none",
     cursor: "text",
-    transition: "border-color 0.3s ease",
-    letterSpacing: "0.04em",
+    transition: "border-color 0.25s ease, background 0.25s ease",
+    letterSpacing: "0.02em",
+    boxSizing: "border-box" as const,
   });
 
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,700&family=Space+Mono:wght@400;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Mono:wght@400;500&display=swap');
+
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-        :root { --accent: #FF3B1E; --dark: #1A1410; --bg: #F5F1EC; }
-        html, body { width: 100%; height: 100%; overflow-x: hidden; background: var(--bg); }
+
+        :root {
+          --accent: #D63B20;
+          --dark: #1A1410;
+          --bg: #F5F1EC;
+          --text-muted: rgba(26,20,16,0.55);
+          --text-label: rgba(26,20,16,0.45);
+          --border-light: rgba(26,20,16,0.18);
+        }
+
+        html, body {
+          width: 100%;
+          height: 100%;
+          overflow-x: hidden;
+          background: var(--bg);
+          font-family: 'DM Mono', monospace;
+        }
 
         @media (min-width: 768px) {
           html, body { cursor: none; }
         }
 
         @keyframes fadeIn    { from { opacity: 0 } to { opacity: 1 } }
-        @keyframes slideUp   { from { opacity: 0; transform: translateY(30px) } to { opacity: 1; transform: translateY(0) } }
-        @keyframes slideRight{ from { opacity: 0; transform: translateX(-30px) } to { opacity: 1; transform: translateX(0) } }
-        @keyframes lineGrow  { from { transform: scaleX(0) } to { transform: scaleX(1) } }
+        @keyframes slideUp   { from { opacity: 0; transform: translateY(28px) } to { opacity: 1; transform: translateY(0) } }
         @keyframes dotPulse  { 0%,100% { opacity:1; transform:scale(1) } 50% { opacity:0.35; transform:scale(0.65) } }
-        @keyframes successPop{ from { opacity: 0; transform: scale(0.85) } to { opacity: 1; transform: scale(1) } }
+        @keyframes successPop{ from { opacity: 0; transform: scale(0.88) } to { opacity: 1; transform: scale(1) } }
+        @keyframes pulseGreen{ 0%,100% { opacity:1; transform:scale(1) } 50% { opacity:0.55; transform:scale(0.72) } }
 
-        ::placeholder { color: rgba(26,20,16,0.25); font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 0.1em; }
+        ::placeholder {
+          color: rgba(26,20,16,0.28);
+          font-family: 'DM Mono', monospace;
+          font-size: 12px;
+          letter-spacing: 0.04em;
+        }
+
         textarea { resize: none; }
 
         .contact-info-link:hover { color: var(--accent) !important; }
         .social-link:hover       { color: var(--accent) !important; }
-        .submit-btn:hover:not(:disabled) { background: #E6351B !important; }
-        .submit-btn:disabled { opacity: 0.6; cursor: not-allowed !important; }
 
-        /* ── Layout responsive ── */
+        .submit-btn:hover:not(:disabled) {
+          background: #BE3318 !important;
+        }
+        .submit-btn:active:not(:disabled) {
+          transform: scale(0.98);
+        }
+        .submit-btn:disabled {
+          opacity: 0.55;
+          cursor: not-allowed !important;
+        }
+
+        /* ── Layout principal ── */
         .contact-grid {
           display: grid;
-          grid-template-columns: 1fr 1.6fr;
-          gap: 80px;
+          grid-template-columns: 1fr 1.65fr;
+          gap: 64px;
           align-items: start;
         }
 
-        /* Grille nom / email : 2 colonnes desktop, 1 colonne mobile */
+        /* Grille nom / email */
         .form-name-email-grid {
           display: grid;
           grid-template-columns: 1fr 1fr;
-          gap: 32px;
+          gap: 28px;
         }
 
-        /* Footer du formulaire : space-between desktop, colonne mobile */
+        /* Footer du formulaire */
         .form-footer {
           display: flex;
           align-items: center;
           justify-content: space-between;
           gap: 16px;
+          flex-wrap: wrap;
         }
 
-        /* Dot grid : caché en mobile pour ne pas gêner */
+        /* Dot grid */
         .dot-grid {
           position: fixed;
           top: 24px;
@@ -206,10 +250,11 @@ export default function Contact() {
           display: grid;
           grid-template-columns: repeat(6, 10px);
           gap: 8px;
-          opacity: 0.55;
+          opacity: 0.5;
           animation: fadeIn 1.2s ease 0.3s both;
         }
 
+        /* ── Responsive ── */
         @media (max-width: 767px) {
           .contact-grid {
             grid-template-columns: 1fr;
@@ -231,7 +276,7 @@ export default function Contact() {
           }
 
           .submit-btn {
-            width: 100%;
+            width: 100% !important;
             justify-content: center;
           }
 
@@ -244,7 +289,7 @@ export default function Contact() {
           }
 
           .contact-header {
-            margin-bottom: 40px !important;
+            margin-bottom: 36px !important;
           }
 
           .contact-success {
@@ -275,7 +320,17 @@ export default function Contact() {
       {/* Dot grid */}
       <div className="dot-grid">
         {dots.map((_, i) => (
-          <span key={i} style={{ width: 4, height: 4, background: "var(--accent)", borderRadius: "50%", display: "block", animation: `dotPulse 3s ease-in-out ${i % 2 === 0 ? "0s" : "0.5s"} infinite` }} />
+          <span
+            key={i}
+            style={{
+              width: 4,
+              height: 4,
+              background: "var(--accent)",
+              borderRadius: "50%",
+              display: "block",
+              animation: `dotPulse 3s ease-in-out ${i % 2 === 0 ? "0s" : "0.5s"} infinite`,
+            }}
+          />
         ))}
       </div>
 
@@ -283,89 +338,304 @@ export default function Contact() {
 
       <main className="contact-main portfolio-page-main">
 
-        {/* Header */}
-        <section className="contact-header portfolio-section-header portfolio-section-header--contact">
-          <p className="portfolio-eyebrow">Parlons-en</p>
-          <h1 className="portfolio-heading-display">
-            Un projet ?
+        {/* ── Header ── */}
+        <section
+          className="contact-header portfolio-section-header portfolio-section-header--contact"
+          style={{ marginBottom: 44 }}
+        >
+          <p
+            style={{
+              fontFamily: "'DM Mono', monospace",
+              fontSize: 11,
+              letterSpacing: "0.28em",
+              textTransform: "uppercase",
+              color: "var(--accent)",
+              marginBottom: 12,
+              fontWeight: 500,
+            }}
+          >
+            Parlons-en
+          </p>
+
+          <h1
+            style={{
+              fontFamily: "'Playfair Display', serif",
+              fontSize: "clamp(2.2rem, 6vw, 3.6rem)",
+              fontWeight: 900,
+              color: "var(--dark)",
+              lineHeight: 1.05,
+            }}
+          >
+            Un projet&nbsp;?
           </h1>
-          <div className="portfolio-accent-divider portfolio-accent-divider--flush" />
+
+          {/* Divider accent */}
+          <div
+            style={{
+              width: 48,
+              height: 3,
+              background: "var(--accent)",
+              marginTop: 18,
+              borderRadius: 1,
+            }}
+          />
         </section>
 
+        {/* ── Grid principal ── */}
         <div
           className="contact-grid"
-          style={{ opacity: 0, animation: "slideUp 0.9s ease 0.9s forwards" }}
+          style={{ opacity: 0, animation: "slideUp 0.9s ease 0.8s forwards" }}
         >
 
-          {/* Colonne gauche — coordonnées */}
-          <div style={{ display: "flex", flexDirection: "column" as const, gap: 48 }}>
+          {/* ── Colonne gauche — coordonnées ── */}
+          <div style={{ display: "flex", flexDirection: "column", gap: 36 }}>
+
+            {/* Coordonnées */}
             <div>
-              <p style={{ fontFamily: "'Space Mono', monospace", fontSize: 10, letterSpacing: "0.25em", textTransform: "uppercase" as const, color: "var(--accent)", marginBottom: 20 }}>Coordonnées</p>
+              <p
+                style={{
+                  fontFamily: "'DM Mono', monospace",
+                  fontSize: 10,
+                  letterSpacing: "0.26em",
+                  textTransform: "uppercase",
+                  color: "var(--accent)",
+                  marginBottom: 18,
+                  fontWeight: 500,
+                }}
+              >
+                Coordonnées
+              </p>
+
               {[
                 { label: "Email", value: "horefyrina@gmail.com", href: "mailto:horefyrina@gmail.com" },
                 { label: "Téléphone", value: "+261 38 75 164 80", href: "tel:+261387516480" },
                 { label: "Localisation", value: "Fianarantsoa, Madagascar", href: null },
               ].map(({ label, value, href }) => (
-                <div key={label} style={{ marginBottom: 24, borderBottom: "1px solid rgba(26,20,16,0.06)", paddingBottom: 20 }}>
-                  <p style={{ fontFamily: "'Space Mono', monospace", fontSize: 9, letterSpacing: "0.2em", color: "rgba(26,20,16,0.3)", textTransform: "uppercase" as const, marginBottom: 6 }}>{label}</p>
+                <div
+                  key={label}
+                  style={{
+                    marginBottom: 20,
+                    borderBottom: "1px solid rgba(26,20,16,0.08)",
+                    paddingBottom: 18,
+                  }}
+                >
+                  <p
+                    style={{
+                      fontFamily: "'DM Mono', monospace",
+                      fontSize: 10,
+                      letterSpacing: "0.2em",
+                      color: "rgba(26,20,16,0.4)",
+                      textTransform: "uppercase",
+                      marginBottom: 6,
+                    }}
+                  >
+                    {label}
+                  </p>
                   {href ? (
-                    <a href={href} className="contact-info-link" style={{ fontFamily: "'Space Mono', monospace", fontSize: 12, color: "rgba(26,20,16,0.6)", textDecoration: "none", transition: "color 0.3s ease", cursor: "pointer" }}>{value}</a>
+                    <a
+                      href={href}
+                      className="contact-info-link"
+                      style={{
+                        fontFamily: "'DM Mono', monospace",
+                        fontSize: 13,
+                        color: "rgba(26,20,16,0.58)",
+                        textDecoration: "none",
+                        transition: "color 0.25s ease",
+                        cursor: "pointer",
+                      }}
+                    >
+                      {value}
+                    </a>
                   ) : (
-                    <p style={{ fontFamily: "'Space Mono', monospace", fontSize: 12, color: "rgba(26,20,16,0.6)" }}>{value}</p>
+                    <p
+                      style={{
+                        fontFamily: "'DM Mono', monospace",
+                        fontSize: 13,
+                        color: "rgba(26,20,16,0.58)",
+                      }}
+                    >
+                      {value}
+                    </p>
                   )}
                 </div>
               ))}
             </div>
 
+            {/* Réseaux */}
             <div>
-              <p style={{ fontFamily: "'Space Mono', monospace", fontSize: 10, letterSpacing: "0.25em", textTransform: "uppercase" as const, color: "var(--accent)", marginBottom: 20 }}>Réseaux</p>
-              <div style={{ display: "flex", flexDirection: "column" as const, gap: 12 }}>
+              <p
+                style={{
+                  fontFamily: "'DM Mono', monospace",
+                  fontSize: 10,
+                  letterSpacing: "0.26em",
+                  textTransform: "uppercase",
+                  color: "var(--accent)",
+                  marginBottom: 16,
+                  fontWeight: 500,
+                }}
+              >
+                Réseaux
+              </p>
+              <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
                 {[
                   { name: "LinkedIn", url: "#" },
                   { name: "GitHub", url: "#" },
                   { name: "Instagram", url: "#" },
                 ].map(({ name, url }) => (
-                  <a key={name} href={url} className="contact-info-link" style={{ fontFamily: "'Space Mono', monospace", fontSize: 11, color: "rgba(26,20,16,0.4)", textDecoration: "none", letterSpacing: "0.1em", display: "flex", alignItems: "center", gap: 10, cursor: "pointer", transition: "color 0.3s ease" }}>
-                    <span style={{ width: 20, height: 1, background: "rgba(255,59,30,0.4)", display: "inline-block" }} />
+                  <a
+                    key={name}
+                    href={url}
+                    className="social-link"
+                    style={{
+                      fontFamily: "'DM Mono', monospace",
+                      fontSize: 12,
+                      color: "rgba(26,20,16,0.45)",
+                      textDecoration: "none",
+                      letterSpacing: "0.1em",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 10,
+                      cursor: "pointer",
+                      transition: "color 0.25s ease",
+                    }}
+                  >
+                    <span
+                      style={{
+                        width: 20,
+                        height: 1,
+                        background: "rgba(214,59,32,0.4)",
+                        display: "inline-block",
+                        flexShrink: 0,
+                      }}
+                    />
                     {name}
                   </a>
                 ))}
               </div>
             </div>
 
-            <div style={{ padding: "20px 24px", border: "1px solid rgba(255,59,30,0.2)", background: "rgba(255,59,30,0.03)", position: "relative" }}>
-              <div style={{ position: "absolute", top: 0, left: 0, width: 3, height: "100%", background: "var(--accent)" }} />
-              <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
-                <span style={{ width: 8, height: 8, borderRadius: "50%", background: "#4cff72", display: "inline-block", boxShadow: "0 0 8px rgba(76,255,114,0.4)" }} />
-                <span style={{ fontFamily: "'Space Mono', monospace", fontSize: 10, color: "rgba(26,20,16,0.5)", letterSpacing: "0.15em", textTransform: "uppercase" as const }}>Disponible</span>
+            {/* Disponibilité */}
+            <div
+              style={{
+                padding: "18px 20px",
+                border: "1px solid rgba(214,59,32,0.2)",
+                background: "rgba(214,59,32,0.04)",
+                position: "relative",
+                borderRadius: 2,
+              }}
+            >
+              <div
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  width: 3,
+                  height: "100%",
+                  background: "var(--accent)",
+                  borderRadius: "2px 0 0 2px",
+                }}
+              />
+              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
+                <span
+                  style={{
+                    width: 8,
+                    height: 8,
+                    borderRadius: "50%",
+                    background: "#3ecf6f",
+                    display: "inline-block",
+                    animation: "pulseGreen 2.4s ease-in-out infinite",
+                  }}
+                />
+                <span
+                  style={{
+                    fontFamily: "'DM Mono', monospace",
+                    fontSize: 10,
+                    color: "rgba(26,20,16,0.5)",
+                    letterSpacing: "0.18em",
+                    textTransform: "uppercase",
+                  }}
+                >
+                  Disponible
+                </span>
               </div>
-              <p style={{ fontFamily: "'Space Mono', monospace", fontSize: 11, color: "rgba(26,20,16,0.55)", lineHeight: 1.8 }}>Ouvert à de nouveaux projets freelance dès maintenant.</p>
+              <p
+                style={{
+                  fontFamily: "'DM Mono', monospace",
+                  fontSize: 12,
+                  color: "rgba(26,20,16,0.55)",
+                  lineHeight: 1.75,
+                }}
+              >
+                Ouvert à de nouveaux projets freelance dès maintenant.
+              </p>
             </div>
           </div>
 
-          {/* Colonne droite — formulaire */}
+          {/* ── Colonne droite — formulaire ── */}
           <div>
             {sent ? (
-              <div className="contact-success" style={{ padding: "64px 48px", border: "1px solid rgba(255,59,30,0.2)", textAlign: "center" as const, animation: "successPop 0.5s cubic-bezier(0.22,1,0.36,1) both" }}>
-                <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 56, color: "var(--accent)", marginBottom: 20 }}>✓</div>
-                <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 28, fontWeight: 900, color: "var(--dark)", marginBottom: 12 }}>Message envoyé !</h2>
-                <p style={{ fontFamily: "'Space Mono', monospace", fontSize: 11, color: "rgba(26,20,16,0.5)", lineHeight: 1.9 }}>Merci. Je vous répondrai sous 24–48h.</p>
+              <div
+                className="contact-success"
+                style={{
+                  padding: "60px 48px",
+                  border: "1px solid rgba(214,59,32,0.2)",
+                  borderRadius: 2,
+                  textAlign: "center",
+                  background: "rgba(255,255,255,0.35)",
+                  animation: "successPop 0.5s cubic-bezier(0.22,1,0.36,1) both",
+                }}
+              >
+                <div
+                  style={{
+                    fontFamily: "'Playfair Display', serif",
+                    fontSize: 52,
+                    color: "var(--accent)",
+                    marginBottom: 20,
+                  }}
+                >
+                  ✓
+                </div>
+                <h2
+                  style={{
+                    fontFamily: "'Playfair Display', serif",
+                    fontSize: 26,
+                    fontWeight: 900,
+                    color: "var(--dark)",
+                    marginBottom: 12,
+                  }}
+                >
+                  Message envoyé !
+                </h2>
+                <p
+                  style={{
+                    fontFamily: "'DM Mono', monospace",
+                    fontSize: 12,
+                    color: "rgba(26,20,16,0.55)",
+                    lineHeight: 1.85,
+                  }}
+                >
+                  Merci. Je vous répondrai sous 24–48h.
+                </p>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} noValidate style={{ display: "flex", flexDirection: "column" as const, gap: 36 }}>
-
+              <form
+                onSubmit={handleSubmit}
+                noValidate
+                style={{ display: "flex", flexDirection: "column", gap: 28 }}
+              >
+                {/* Nom + Email */}
                 <div className="form-name-email-grid">
                   {[
                     { name: "name", label: "Votre nom", placeholder: "Rina Horefy", type: "text" },
                     { name: "email", label: "Adresse email", placeholder: "rina@exemple.com", type: "email" },
                   ].map(({ name, label, placeholder, type }) => (
                     <div key={name}>
-                      <label style={{ fontFamily: "'Space Mono', monospace", fontSize: 9, letterSpacing: "0.25em", textTransform: "uppercase" as const, color: focused === name ? "var(--accent)" : "rgba(26,20,16,0.3)", display: "block", marginBottom: 10, transition: "color 0.3s ease" }}>{label}</label>
+                      <label style={fieldLabelStyle(name)}>{label}</label>
                       <input
                         type={type}
                         placeholder={placeholder}
                         value={form[name as keyof typeof form]}
-                        onChange={e => setForm(f => ({ ...f, [name]: e.target.value }))}
+                        onChange={(e) => setForm((f) => ({ ...f, [name]: e.target.value }))}
                         onFocus={() => setFocused(name)}
                         onBlur={() => setFocused(null)}
                         style={inputStyle(name)}
@@ -374,65 +644,96 @@ export default function Contact() {
                   ))}
                 </div>
 
+                {/* Sujet */}
                 <div>
-                  <label style={{ fontFamily: "'Space Mono', monospace", fontSize: 9, letterSpacing: "0.25em", textTransform: "uppercase" as const, color: focused === "subject" ? "var(--accent)" : "rgba(26,20,16,0.3)", display: "block", marginBottom: 10, transition: "color 0.3s ease" }}>Sujet</label>
+                  <label style={fieldLabelStyle("subject")}>Sujet</label>
                   <input
                     type="text"
-                    placeholder="Projet de site web, collaboration..."
+                    placeholder="Projet de site web, collaboration…"
                     value={form.subject}
-                    onChange={e => setForm(f => ({ ...f, subject: e.target.value }))}
+                    onChange={(e) => setForm((f) => ({ ...f, subject: e.target.value }))}
                     onFocus={() => setFocused("subject")}
                     onBlur={() => setFocused(null)}
                     style={inputStyle("subject")}
                   />
                 </div>
 
+                {/* Message */}
                 <div>
-                  <label style={{ fontFamily: "'Space Mono', monospace", fontSize: 9, letterSpacing: "0.25em", textTransform: "uppercase" as const, color: focused === "message" ? "var(--accent)" : "rgba(26,20,16,0.3)", display: "block", marginBottom: 10, transition: "color 0.3s ease" }}>Message</label>
+                  <label style={fieldLabelStyle("message")}>Message</label>
                   <textarea
                     rows={6}
-                    placeholder="Décrivez votre projet, vos objectifs, votre budget estimé..."
+                    placeholder="Décrivez votre projet, vos objectifs, votre budget estimé…"
                     value={form.message}
-                    onChange={e => setForm(f => ({ ...f, message: e.target.value }))}
+                    onChange={(e) => setForm((f) => ({ ...f, message: e.target.value }))}
                     onFocus={() => setFocused("message")}
                     onBlur={() => setFocused(null)}
-                    style={{ ...inputStyle("message"), display: "block" }}
+                    style={{ ...inputStyle("message"), display: "block", lineHeight: 1.7 }}
                   />
                 </div>
 
+                {/* Message d'erreur */}
                 {error && (
-                  <p style={{ fontFamily: "'Space Mono', monospace", fontSize: 11, color: "var(--accent)", letterSpacing: "0.04em", borderLeft: "2px solid var(--accent)", paddingLeft: 12 }}>
+                  <p
+                    style={{
+                      fontFamily: "'DM Mono', monospace",
+                      fontSize: 12,
+                      color: "var(--accent)",
+                      letterSpacing: "0.04em",
+                      borderLeft: "2px solid var(--accent)",
+                      paddingLeft: 12,
+                      lineHeight: 1.6,
+                    }}
+                  >
                     {error}
                   </p>
                 )}
 
+                {/* Footer formulaire */}
                 <div className="form-footer">
-                  <p style={{ fontFamily: "'Space Mono', monospace", fontSize: 10, color: "rgba(26,20,16,0.3)", letterSpacing: "0.08em" }}>Réponse sous 24–48h</p>
+                  <p
+                    style={{
+                      fontFamily: "'DM Mono', monospace",
+                      fontSize: 11,
+                      color: "rgba(26,20,16,0.35)",
+                      letterSpacing: "0.08em",
+                    }}
+                  >
+                    Réponse sous 24–48h
+                  </p>
+
                   <div className="submit-btn-wrap">
                     <button
                       type="submit"
                       className="submit-btn"
                       disabled={isSending}
                       style={{
-                        fontFamily: "'Space Mono', monospace",
+                        fontFamily: "'DM Mono', monospace",
                         fontSize: 11,
                         letterSpacing: "0.2em",
-                        textTransform: "uppercase" as const,
+                        textTransform: "uppercase",
                         color: "#F5F1EC",
                         background: isSending ? "rgba(26,20,16,0.35)" : "var(--accent)",
                         border: "none",
-                        padding: "18px 36px",
+                        padding: "15px 32px",
                         cursor: isSending ? "not-allowed" : "pointer",
-                        transition: "background 0.3s ease",
+                        borderRadius: 2,
+                        transition: "background 0.25s ease, transform 0.1s ease",
                         display: "flex",
                         alignItems: "center",
-                        gap: 12,
+                        gap: 10,
                       }}
                     >
                       {isSending ? "Envoi en cours…" : "Envoyer"}
                       {!isSending && (
                         <svg width={14} height={14} viewBox="0 0 14 14" fill="none">
-                          <path d="M1 7h12M7 1l6 6-6 6" stroke="currentColor" strokeWidth={1.4} strokeLinecap="round" strokeLinejoin="round" />
+                          <path
+                            d="M1 7h12M7 1l6 6-6 6"
+                            stroke="currentColor"
+                            strokeWidth={1.4}
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
                         </svg>
                       )}
                     </button>
