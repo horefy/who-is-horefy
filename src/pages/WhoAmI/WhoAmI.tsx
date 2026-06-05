@@ -1,13 +1,12 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { Link } from "react-router";
 import photo from "../../assets/photo_1.png";
 import Navbar from "../navbar/navbar";
 import Footer from "../Footer/footer";
 
 export default function WhoAmI() {
-  const [isOpen, setIsOpen] = useState(false);
   const cursorRef = useRef<HTMLDivElement>(null);
   const cursorRingRef = useRef<HTMLDivElement>(null);
 
