@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://who-is-horefy.vercel.app/sitemap.xml
